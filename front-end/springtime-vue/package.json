@@ -1,0 +1,27 @@
+{
+  "name": "springtime-vue",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@vue/cli-shared-utils": "^4.5.9",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "cross-spawn": "^6.0.5",
+    "execa": "^1.0.0",
+    "util": "^0.11.1",
+    "vue": "^2.6.12",
+    "vue-count-to": "^1.0.13",
+    "vue-router": "^3.5.1",
+    "vue-save-state": "^1.2.0",
+    "vue-sessionstorage": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.9",
+    "@vue/cli-service": "^4.5.9",
+    "vue-template-compiler": "^2.6.11"
+  }
+}

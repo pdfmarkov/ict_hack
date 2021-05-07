@@ -1,0 +1,39 @@
+package org.comrades.springtime.dao;
+
+import org.comrades.springtime.customExceptions.UserNotFoundException;
+import org.comrades.springtime.module.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    User findUserByName(String login) throws UserNotFoundException;
+
+    User findUserByUID(Long id) throws UserNotFoundException;
+
+    User findUserByRefreshToken(String refreshToken) throws UserNotFoundException;
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.firstname = ?2 where u.UID = ?1")
+    void updateUserFirstName(Long id, String firstname);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.secondname = ?2 where u.UID = ?1")
+    void updateUserSecondName(Long id, String secondname);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.thirdname = ?2 where u.UID = ?1")
+    void updateUserThirdName(Long id, String thirdname);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.phone = ?2 where u.UID = ?1")
+    void updateUserPhone(Long id, String phone);
+
+}

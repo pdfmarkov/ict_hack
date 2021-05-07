@@ -1,0 +1,8 @@
+spring.datasource.url = jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username = postgres
+spring.datasource.password = Buzuluk2002
+
+spring.jpa.hibernate.ddl-auto = update
+
+token.expire_time = ${EXPIRE_TIME}
+secret.key = ${SECRET_KEY}
