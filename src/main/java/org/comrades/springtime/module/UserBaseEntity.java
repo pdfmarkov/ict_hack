@@ -14,14 +14,15 @@ public abstract class UserBaseEntity {
 
     public UserBaseEntity() {}
 
-    public UserBaseEntity(String name, String password) {
-        this.name = name;
+    public UserBaseEntity(String login, String password) {
+        this.login = login;
         this.password = password;
     }
 
-    @Column(name = "name")
+    @Column(name = "login")
     @NonNull
-    private String name;
+    private String login;
+
     @Column(name = "password")
     @NonNull
     private String password;

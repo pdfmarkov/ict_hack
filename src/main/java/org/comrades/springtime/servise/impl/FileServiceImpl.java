@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -24,7 +25,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public FileModel saveFile(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
             if (filename.contains("...")) {

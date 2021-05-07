@@ -54,7 +54,7 @@ public class AuthorizationController {
 
             if (codeGenerator.checkCode(username, code)) {
                 User user = new User(username, password);
-                user.addRole(Role.ROLE_USER);
+                user.addRole(Role.ROLE_STUDENT);
 
 
                 String refreshToken = jwtTokenProvider.generateRefreshToken(user);
@@ -66,7 +66,6 @@ public class AuthorizationController {
 
                 Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                System.out.println("я срабатываю");
                 response.put("refreshToken", refreshToken);
                 response.put("accessToken", accessToken);
 
@@ -98,12 +97,12 @@ public class AuthorizationController {
             try {
                 userService.findByUsername(username);
                 throw new NonUniqueResultException("Username is already in use.");
-            }catch (UserNotFoundException ex) {}
+            } catch (UserNotFoundException ignored) {}
 
             codeGenerator.generateCode(username);
 
             try {
-                emailService.sendSimpleMessage(username,"Подтверждение почты. Умный склад", "Ваш пароль для входа: "+ codeGenerator.getCode(username));
+                emailService.sendSimpleMessage(username,"Подтверждение почты. ITMO.TEAM", "Ваш код для входа: "+ codeGenerator.getCode(username));
             } catch (Exception e){
                throw new NonUniqueResultException("Произошла ошибка при отправке письма");
             }

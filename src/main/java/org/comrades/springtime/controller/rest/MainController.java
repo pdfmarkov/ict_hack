@@ -1,69 +1,77 @@
 package org.comrades.springtime.controller.rest;
 
 
-import org.comrades.springtime.module.Dot;
+import org.comrades.springtime.customExceptions.UserNotFoundException;
+import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.User;
-import org.comrades.springtime.module.requested.DotDto;
-import org.comrades.springtime.module.requested.ParamDto;
-import org.comrades.springtime.servise.DotService;
+import org.comrades.springtime.module.requested.PostDto;
+import org.comrades.springtime.servise.PostService;
 import org.comrades.springtime.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "https://pdfmarkov.github.io")
 @RestController
 @RequestMapping("/main/app/**")
 public class MainController {
 
-    private final DotService dotService;
+    private final PostService postService;
     private final UserService userService;
 
     @Autowired
-    public MainController(DotService dotService, UserService userService) {
-        this.dotService = dotService;
+    public MainController(PostService postService, UserService userService) {
+        this.postService = postService;
         this.userService = userService;
     }
 
     @PostMapping("/add")
-    public ResponseEntity add(@RequestBody DotDto dotDto) {
+    public ResponseEntity add(@RequestBody PostDto postDto) {
         Map<Object, Object> response = new HashMap<>();
 
-        Dot dot = new Dot();
+        Post post = new Post();
 
-        dot.setDeal(dotDto.getDeal());
-
+        post.setText(postDto.getText());
+        post.setTitle(postDto.getTitle());
 
         User user = userService.getCurrentUser();
-        dot.setUser(user);
+        try {
+            user = userService.findByUsername(postDto.getLogin());
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+        post.setUser(user);
 
-        dotService.saveDot(dot);
+        postService.savePost(post);
 
-        dot.setUser(null);
+        post.setUser(null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(dot);
+        return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
     @PostMapping("/clear")
     public ResponseEntity clear() {
         User user = userService.getCurrentUser();
-        dotService.clearByUser(user);
+        postService.clearByUser(user);
 
         return ResponseEntity.ok("");
     }
 
-
-    @PostMapping("/dots/all")
-    public ResponseEntity getEveryUserDot() {
-        User user = userService.getCurrentUser();
-        List<Dot> dotList = dotService.getDotsByUser(user);
-
-        for(Dot dot : dotList) {
-            dot.setUser(null);
-        }
-        return ResponseEntity.ok(dotList);
+    @PostMapping("/hello")
+    public ResponseEntity hello() {
+        return ResponseEntity.ok("");
     }
+
+    @PostMapping("/all")
+    public ResponseEntity getAllPosts() {
+        List<Post> posts = postService.getPosts();
+        if (posts != null) return ResponseEntity.ok(posts);
+        else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("empty");
+    }
+
 }

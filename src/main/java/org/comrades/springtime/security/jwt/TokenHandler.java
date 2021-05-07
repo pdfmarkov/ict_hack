@@ -57,7 +57,7 @@ public class TokenHandler implements Tokenable {
 
     @Override
     public String generateRefreshToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getName());
+        Claims claims = Jwts.claims().setSubject(user.getLogin());
 
 //        SecretKey secretKeyClass = initAndGetSecretKey();
 
@@ -72,7 +72,7 @@ public class TokenHandler implements Tokenable {
 
     @Override
     public String generateAccessToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getName());
+        Claims claims = Jwts.claims().setSubject(user.getLogin());
 
 //        SecretKey secretKeyClass = initAndGetSecretKey();
 

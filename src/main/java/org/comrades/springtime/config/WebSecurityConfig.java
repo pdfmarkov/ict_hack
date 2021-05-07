@@ -23,6 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final String REFRESH_ENDPOINT = "/api/refresh/**";
     private final String FILE = "/main/file/**";
     private final String CONTENT = "/dist/**";
+    private final String MAIN = "/main/app/**";
 
     private final TokenHandler jwtTokenHandler;
 
@@ -54,6 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(REFRESH_ENDPOINT).permitAll()
                     .antMatchers(CONTENT).permitAll()
                     .antMatchers(FILE).permitAll()
+                //TODO: убери main
+                    .antMatchers(MAIN).permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .addFilterBefore(new JwtFilter(jwtTokenHandler), UsernamePasswordAuthenticationFilter.class);
@@ -66,11 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers("/api/refresh/**","/main/file/**");
-
-
-
     }
-
 
 
     @Bean

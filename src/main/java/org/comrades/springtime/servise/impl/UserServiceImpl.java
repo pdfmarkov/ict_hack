@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         User user;
 
         try {
-            user = userRepository.findUserByName(login);
+            user = userRepository.findUserByLogin(login);
         }catch (UserNotFoundException ex) {
             //TODO: log UserNotFoundException
             throw new UserNotFoundException(ex.getMessage());
@@ -118,8 +118,8 @@ public class UserServiceImpl implements UserService {
         User user = null;
 
         try {
-            user =userRepository.findUserByName(userName);
-        }catch (UserNotFoundException ex) { /*NOPE*/}
+            user = userRepository.findUserByLogin(userName);
+        } catch (UserNotFoundException ignored) {}
 
         return user;
     }

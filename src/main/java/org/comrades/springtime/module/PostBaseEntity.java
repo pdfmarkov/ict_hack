@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class DotBaseEntity {
+public abstract class PostBaseEntity {
 
     @Column(name = "deal")
     private String deal;

@@ -28,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = null;
         try {
-            user = userRepository.findUserByName(s);
+            user = userRepository.findUserByLogin(s);
         } catch (UserNotFoundException e) {
             //TODO: log UserNotFoundException
         }

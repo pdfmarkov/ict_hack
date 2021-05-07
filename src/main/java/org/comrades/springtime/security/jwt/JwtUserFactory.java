@@ -14,7 +14,7 @@ public class JwtUserFactory implements JwtFactory<JwtUser, User> {
     public JwtUser create(User user) {
         return new JwtUser(
                 user.getUID(),
-                user.getName(),
+                user.getLogin(),
                 user.getPassword(),
                 mapToGrantedAuthorities(user.getRoles()));
     }

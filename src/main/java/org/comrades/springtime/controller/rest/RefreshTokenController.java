@@ -43,7 +43,7 @@ public class RefreshTokenController {
             User user = userService.findByRefreshToken(frontRefreshToken);
             String tokenUserName = tokenHandler.getUsername(frontRefreshToken);
 
-            if (user.getName().equals(tokenUserName)) {
+            if (user.getLogin().equals(tokenUserName)) {
                 String accessToken = tokenHandler.generateAccessToken(user);
 
                 response.put("accessToken", accessToken);

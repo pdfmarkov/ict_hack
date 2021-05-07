@@ -2,8 +2,9 @@ package org.comrades.springtime.module;
 
 public enum Role {
 
-    ROLE_USER("USER"),
-    ROLE_ADMIN("ADMIN");
+    ROLE_STUDENT("STUDENT"),
+    ROLE_MENTOR("MENTOR"),
+    ROLE_MODERATOR("MODERATOR");
 
 
     private String roleName;
