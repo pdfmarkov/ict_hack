@@ -65,7 +65,7 @@ public class AuthorizationController {
 
             String accessToken = jwtTokenProvider.generateAccessToken(user);
 
-            if (userService.findByUsername(username) == null)
+            if (userService.findByUsername(username).getLogin().equals(""))
                 userService.saveUser(user);
             else return ResponseEntity.status(HttpStatus.FOUND).body(response);
 
