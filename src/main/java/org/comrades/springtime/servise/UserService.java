@@ -22,7 +22,7 @@ public interface UserService {
 
     void updateSecondName(User user, String secondname);
 
-    void updateThirdName(User user, String thirdname);
+    void updateGroup(User user, String thirdname);
 
     void updatePhone(User user, String phone);
 

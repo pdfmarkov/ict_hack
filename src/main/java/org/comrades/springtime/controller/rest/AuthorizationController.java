@@ -5,6 +5,7 @@ import org.comrades.springtime.module.Role;
 import org.comrades.springtime.module.User;
 import org.comrades.springtime.module.requested.AuthenticationRequestDto;
 import org.comrades.springtime.module.requested.ParamDto;
+import org.comrades.springtime.module.requested.TestAuthenticationRequestDto;
 import org.comrades.springtime.security.jwt.TokenHandler;
 import org.comrades.springtime.servise.EmailService;
 import org.comrades.springtime.servise.UserService;
@@ -19,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.persistence.NonUniqueResultException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,77 +45,40 @@ public class AuthorizationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
+    public ResponseEntity register(@RequestBody TestAuthenticationRequestDto testAuthenticationRequestDto) {
         Map<Object, Object> response = new HashMap<>();
         try {
-            String username = authenticationRequestDto.getLogin();
-            String password = authenticationRequestDto.getPassword();
-            String code = authenticationRequestDto.getCode();
+            String username = testAuthenticationRequestDto.getLogin();
+            String password = testAuthenticationRequestDto.getPassword();
+            String course = testAuthenticationRequestDto.getCourse();
+            String group = testAuthenticationRequestDto.getGroup();
+            String firstname = testAuthenticationRequestDto.getFirstname();
+            String secondname = testAuthenticationRequestDto.getSecondname();
+            String role = testAuthenticationRequestDto.getRole();
 
-            if (codeGenerator.checkCode(username, code)) {
-                User user = new User(username, password);
-                user.addRole(Role.ROLE_STUDENT);
-
-
-                String refreshToken = jwtTokenProvider.generateRefreshToken(user);
-                user.setRefreshToken(refreshToken);
-
-                String accessToken = jwtTokenProvider.generateAccessToken(user);
-
-                userService.saveUser(user);
-
-                Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                response.put("refreshToken", refreshToken);
-                response.put("accessToken", accessToken);
-
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            } else
-            {
-                response.put("description","Неверный код подтверждения");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-            }
+            User user = new User(username, password, firstname, secondname, group, course);
+            user.addRole(Role.valueOf(role));
 
 
+            String refreshToken = jwtTokenProvider.generateRefreshToken(user);
+            user.setRefreshToken(refreshToken);
 
-        }catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex) {
+            String accessToken = jwtTokenProvider.generateAccessToken(user);
+
+            userService.saveUser(user);
+
+            Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            response.put("refreshToken", refreshToken);
+            response.put("accessToken", accessToken);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }
 
-    @PostMapping("/confirm")
-    public ResponseEntity confirm(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
-        Map<Object, Object> response = new HashMap<>();
-        try {
-            String username = authenticationRequestDto.getLogin();
-            String password = authenticationRequestDto.getPassword();
-
-            if (username == null || password == null) {
-                throw new NonUniqueResultException("Username or password should not be empty");
-            }
-
-            try {
-                userService.findByUsername(username);
-                throw new NonUniqueResultException("Username is already in use.");
-            } catch (UserNotFoundException ignored) {}
-
-            codeGenerator.generateCode(username);
-
-            try {
-                emailService.sendSimpleMessage(username,"Подтверждение почты. ITMO.TEAM", "Ваш код для входа: "+ codeGenerator.getCode(username));
-            } catch (Exception e){
-               throw new NonUniqueResultException("Произошла ошибка при отправке письма");
-            }
-
-            response.put("email", true);
-            return ResponseEntity.ok(response);
-
-        }catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex) {
-            response.put("description", ex.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
-    }
 
     @PostMapping("/updatefirstname")
     public ResponseEntity updateFirstName(@RequestBody ParamDto paramDto) {
@@ -146,12 +109,12 @@ public class AuthorizationController {
     }
 
     @PostMapping("/updatethirdname")
-    public ResponseEntity updateThirdName(@RequestBody ParamDto paramDto) {
+    public ResponseEntity updateGroup(@RequestBody ParamDto paramDto) {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateThirdName(user,paramDto.getThirdname());
-            response.put("thirdname", userService.findByUsername(paramDto.getLogin()).getThirdname());
+            userService.updateGroup(user,paramDto.getThirdname());
+            response.put("thirdname", userService.findByUsername(paramDto.getLogin()).getUsergroup());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
@@ -180,7 +143,7 @@ public class AuthorizationController {
             User user = userService.findByUsername(paramDto.getLogin());
             response.put("firstname", user.getFirstname());
             response.put("secondname", user.getSecondname());
-            response.put("thirdname", user.getThirdname());
+            response.put("thirdname", user.getUsergroup());
             response.put("phone", user.getPhone());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {

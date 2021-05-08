@@ -98,9 +98,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateThirdName(User user, String thirdname) {
-        user.setThirdname(thirdname);
-        userRepository.updateUserThirdName(user.getUID(),thirdname);
+    public void updateGroup(User user, String group) {
+        user.setUsergroup(group);
+        userRepository.updateUserUsergroup(user.getUID(),group);
     }
 
     @Override

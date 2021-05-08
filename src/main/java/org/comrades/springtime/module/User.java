@@ -18,6 +18,14 @@ public class User extends UserBaseEntity{
         super(login, password);
     }
 
+    public User(String login, String password, String firstname, String secondname, String usergroup, String course) {
+        super(login, password);
+        this.firstname = firstname;
+        this.secondname = secondname;
+        this.course = course;
+        this.usergroup = usergroup;
+    }
+
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,8 +36,10 @@ public class User extends UserBaseEntity{
     private String firstname;
     @Column(name = "secondname")
     private String secondname;
-    @Column(name = "thirdname")
-    private String thirdname;
+    @Column(name = "usergroup")
+    private String usergroup;
+    @Column(name = "course")
+    private String course;
     @Column(name = "phone")
     private String phone;
     @Column(name = "info")
