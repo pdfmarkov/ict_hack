@@ -100,10 +100,8 @@ public class MainController {
 
                 List<Team> teamList = teamService.findByName(user.getTeamList().get(0).getName());
                 outputPost.setNumberOfMembers(teamList.size());
+                data.add(outputPost);
             }
-
-
-
         }
         return ResponseEntity.ok(data);
     }
