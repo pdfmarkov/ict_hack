@@ -223,6 +223,7 @@ public class AuthorizationController {
                 post.setUser(null);
             }
             response.put("posts", posts);
+            response.put("role", user.getRoles().get(0));
 
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
