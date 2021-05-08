@@ -6,7 +6,6 @@ public enum Role {
     MENTOR("MENTOR"),
     MODERATOR("MODERATOR");
 
-
     private final String roleName;
     Role(String roleName) {
         this.roleName = roleName;

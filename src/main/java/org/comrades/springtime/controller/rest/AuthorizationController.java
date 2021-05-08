@@ -71,7 +71,6 @@ public class AuthorizationController {
                 userService.saveUser(user);
             }
 
-
             Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(auth);
             response.put("refreshToken", refreshToken);

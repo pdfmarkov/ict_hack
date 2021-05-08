@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "team")
 public class Team{
+
+    public Team() {}
 
     @Id
     @Column(name = "team_id")
@@ -19,7 +20,12 @@ public class Team{
 
     @Column(name = "name")
     private String name;
+    @Column(name = "login")
+    private String login;
+    @Column(name = "role")
+    private String role;
 
-    @OneToMany(mappedBy = "team")
-    private List<User> userList;
+    @ManyToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 }

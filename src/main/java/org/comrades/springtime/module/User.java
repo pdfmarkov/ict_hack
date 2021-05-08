@@ -51,12 +51,11 @@ public class User extends UserBaseEntity {
     @Column(name = "tg")
     private String tg;
 
-    @ManyToOne()
-    @JoinColumn(name = "team_id", referencedColumnName = "team_id")
-    private Team team;
-
     @OneToMany(mappedBy = "user")
     private List<Post> postList;
+
+    @OneToMany(mappedBy = "user")
+    private List<Team> teamList;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

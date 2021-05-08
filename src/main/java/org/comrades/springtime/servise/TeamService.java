@@ -12,7 +12,11 @@ public interface TeamService {
 
     List<Post> getPosts();
 
+    List<Team> findByName(String name);
+
     void clearByUser(User user);
 
     Team saveTeam(Team team);
+
+    Team findByTeamId(Long teamId);
 }
