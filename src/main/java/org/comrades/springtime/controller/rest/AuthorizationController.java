@@ -264,6 +264,7 @@ public class AuthorizationController {
             String password = codeGenerator.getCode(loginDto.getLogin());
             emailService.sendSimpleMessage(loginDto.getLogin(), "Восстановления пароля. ITMO.TEAM", "Ваш новый пароль: " + password);
             User user = userService.findByUsername(loginDto.getLogin());
+            user.setPassword(password);
             userService.saveUser(user);
             return ResponseEntity.ok(response);
         }catch (UserNotFoundException | AuthenticationException ex) {
