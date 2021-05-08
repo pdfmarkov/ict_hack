@@ -112,13 +112,13 @@ public class AuthorizationController {
         }
     }
 
-    @PostMapping("/updatethirdname")
+    @PostMapping("/updategroup")
     public ResponseEntity updateGroup(@RequestBody ParamDto paramDto) {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateGroup(user,paramDto.getThirdname());
-            response.put("thirdname", userService.findByUsername(paramDto.getLogin()).getUsergroup());
+            userService.updateGroup(user,paramDto.getUsergroup());
+            response.put("usergroup", userService.findByUsername(paramDto.getLogin()).getUsergroup());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
@@ -140,6 +140,20 @@ public class AuthorizationController {
         }
     }
 
+    @PostMapping("/updateinfo")
+    public ResponseEntity updateInfo(@RequestBody ParamDto paramDto) {
+        Map<Object, Object> response = new HashMap<>();
+        try {
+            User user = userService.findByUsername(paramDto.getLogin());
+            userService.updateInfo(user,paramDto.getInfo());
+            response.put("phone", userService.findByUsername(paramDto.getLogin()).getPhone());
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/getinfo")
     public ResponseEntity getInfo(@RequestBody ParamDto paramDto) {
         Map<Object, Object> response = new HashMap<>();
@@ -147,8 +161,10 @@ public class AuthorizationController {
             User user = userService.findByUsername(paramDto.getLogin());
             response.put("firstname", user.getFirstname());
             response.put("secondname", user.getSecondname());
-            response.put("thirdname", user.getUsergroup());
             response.put("phone", user.getPhone());
+            response.put("course", user.getCourse());
+            response.put("usergroup", user.getUsergroup());
+            response.put("info", user.getInfo());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
             e.printStackTrace();

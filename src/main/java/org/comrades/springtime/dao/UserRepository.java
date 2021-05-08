@@ -17,6 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByRefreshToken(String refreshToken) throws UserNotFoundException;
 
+    User findUserByUsergroup(String usergroup) throws UserNotFoundException;
+
+    User findUserByCourse(String course) throws UserNotFoundException;
+
     @Modifying
     @Transactional
     @Query("update User u set u.firstname = ?2 where u.UID = ?1")
@@ -30,11 +34,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     @Query("update User u set u.usergroup = ?2 where u.UID = ?1")
-    void updateUserUsergroup(Long id, String usergroup);
+    void updateUserUserGroup(Long id, String usergroup);
 
     @Modifying
     @Transactional
     @Query("update User u set u.phone = ?2 where u.UID = ?1")
     void updateUserPhone(Long id, String phone);
 
+    @Modifying
+    @Transactional
+    @Query("update User u set u.course = ?2 where u.UID = ?1")
+    void updateUserUserCourse(Long id, String course);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.info = ?2 where u.UID = ?1")
+    void updateUserUserInfo(Long id, String info);
 }

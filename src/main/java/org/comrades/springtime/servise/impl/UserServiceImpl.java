@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateGroup(User user, String group) {
         user.setUsergroup(group);
-        userRepository.updateUserUsergroup(user.getUID(),group);
+        userRepository.updateUserUserGroup(user.getUID(),group);
     }
 
     @Override
@@ -108,6 +108,18 @@ public class UserServiceImpl implements UserService {
         user.setPhone(phone);
         userRepository.updateUserPhone(user.getUID(),phone);
 
+    }
+
+    @Override
+    public void updateCourse(User user, String course) {
+        user.setCourse(course);
+        userRepository.updateUserUserCourse(user.getUID(), course);
+    }
+
+    @Override
+    public void updateInfo(User user, String info) {
+        user.setInfo(info);
+        userRepository.updateUserUserInfo(user.getUID(), info);
     }
 
     @Override

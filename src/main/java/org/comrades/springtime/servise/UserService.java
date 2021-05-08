@@ -22,11 +22,15 @@ public interface UserService {
 
     void updateSecondName(User user, String secondname);
 
-    void updateGroup(User user, String thirdname);
+    void updateGroup(User user, String usergroup);
 
     void updatePhone(User user, String phone);
 
+    void updateCourse(User user, String course);
+
+    void updateInfo(User user, String info);
+
     User getCurrentUser();
 
-    List<User> getAll();
+    List<User> getAllUsers();
 }

@@ -7,9 +7,8 @@ public class ParamDto {
     private String login;
     private String firstname;
     private String secondname;
-    private String thirdname;
+    private String course;
     private String phone;
-    private String email;
-
-
+    private String info;
+    private String usergroup;
 }
