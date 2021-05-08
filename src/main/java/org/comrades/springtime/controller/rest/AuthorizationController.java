@@ -1,5 +1,6 @@
 package org.comrades.springtime.controller.rest;
 
+import org.comrades.springtime.customExceptions.PostNotFoundException;
 import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.Role;
@@ -87,7 +88,7 @@ public class AuthorizationController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
-        } catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex) {
+        } catch (IncorrectResultSizeDataAccessException | NonUniqueResultException | UserNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }
@@ -98,7 +99,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateFirstName(user,paramDto.getFirstname());
+            userService.updateFirstName(user, paramDto.getFirstname());
             response.put("firstname", userService.findByUsername(paramDto.getLogin()).getFirstname());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -112,7 +113,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateSecondName(user,paramDto.getSecondname());
+            userService.updateSecondName(user, paramDto.getSecondname());
             response.put("secondname", userService.findByUsername(paramDto.getLogin()).getSecondname());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -126,7 +127,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateGroup(user,paramDto.getUsergroup());
+            userService.updateGroup(user, paramDto.getUsergroup());
             response.put("usergroup", userService.findByUsername(paramDto.getLogin()).getUsergroup());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -140,7 +141,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updatePhone(user,paramDto.getPhone());
+            userService.updatePhone(user, paramDto.getPhone());
             response.put("phone", userService.findByUsername(paramDto.getLogin()).getPhone());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -154,7 +155,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateInfo(user,paramDto.getInfo());
+            userService.updateInfo(user, paramDto.getInfo());
             response.put("phone", userService.findByUsername(paramDto.getLogin()).getInfo());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -168,7 +169,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateInfo(user,paramDto.getVk());
+            userService.updateInfo(user, paramDto.getVk());
             response.put("vk", userService.findByUsername(paramDto.getLogin()).getVk());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -182,7 +183,7 @@ public class AuthorizationController {
         Map<Object, Object> response = new HashMap<>();
         try {
             User user = userService.findByUsername(paramDto.getLogin());
-            userService.updateInfo(user,paramDto.getTg());
+            userService.updateInfo(user, paramDto.getTg());
             response.put("tg", userService.findByUsername(paramDto.getLogin()).getTg());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -219,13 +220,13 @@ public class AuthorizationController {
             response.put("tg", user.getTg());
             response.put("teamname", user.getTeamList().get(0).getName());
             List<Post> posts = postService.getPostsByUser(user);
-            for(Post post : posts){
+            for (Post post : posts) {
                 post.setUser(null);
             }
             response.put("posts", posts);
 
             return ResponseEntity.ok(response);
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | PostNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
@@ -248,7 +249,7 @@ public class AuthorizationController {
             response.put("accessToken", accessToken);
 
             return ResponseEntity.ok(response);
-        }catch (UserNotFoundException | AuthenticationException ex) {
+        } catch (UserNotFoundException | AuthenticationException ex) {
             if (ex instanceof UserNotFoundException) response.put("description", ex.getMessage());
             else response.put("description", "Wrong login or password.");
 
@@ -267,14 +268,13 @@ public class AuthorizationController {
             user.setPassword(password);
             userService.saveUser(user);
             return ResponseEntity.ok(response);
-        }catch (UserNotFoundException | AuthenticationException ex) {
+        } catch (UserNotFoundException | AuthenticationException ex) {
             if (ex instanceof UserNotFoundException) response.put("description", ex.getMessage());
             else response.put("description", "Wrong login or password.");
 
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }
-
 
 
 }

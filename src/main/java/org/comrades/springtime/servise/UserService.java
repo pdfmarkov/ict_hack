@@ -18,31 +18,29 @@ public interface UserService {
 
     void delete(Long id) throws UserNotFoundException;
 
-    User saveUser(User user);
+    User saveUser(User user) throws UserNotFoundException;
 
-    void updateFirstName(User user, String firstname);
+    void updateFirstName(User user, String firstname) throws UserNotFoundException;
 
-    void updateSecondName(User user, String secondname);
+    void updateSecondName(User user, String secondname) throws UserNotFoundException;
 
-    void updateGroup(User user, String usergroup);
+    void updateGroup(User user, String usergroup) throws UserNotFoundException;
 
-    void updatePhone(User user, String phone);
+    void updatePhone(User user, String phone) throws UserNotFoundException;
 
-    void updateCourse(User user, String course);
+    void updateCourse(User user, String course) throws UserNotFoundException;
 
-    void updateInfo(User user, String info);
+    void updateInfo(User user, String info) throws UserNotFoundException;
 
-    void updateVk(User user, String vk);
+    void updateVk(User user, String vk) throws UserNotFoundException;
 
-    void updateTg(User user, String tg);
+    void updateTg(User user, String tg) throws UserNotFoundException;
 
+    User getCurrentUser() throws UserNotFoundException;
 
+    List<User> getAllUsers() throws UserNotFoundException;
 
-    User getCurrentUser();
+    List<User> getUsersByUsergroup(String usergroup) throws UserNotFoundException;
 
-    List<User> getAllUsers();
-
-    List<User> getUsersByUsergroup(String usergroup);
-
-    List<User> getUsersByCourse(String course);
+    List<User> getUsersByCourse(String course) throws UserNotFoundException;
 }

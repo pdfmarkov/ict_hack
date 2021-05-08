@@ -1,5 +1,6 @@
 package org.comrades.springtime.controller.rest;
 
+import org.comrades.springtime.customExceptions.PostNotFoundException;
 import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.Team;
@@ -35,7 +36,7 @@ public class MainController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity add(@RequestBody PostDto postDto) {
+    public ResponseEntity add(@RequestBody PostDto postDto) throws UserNotFoundException, PostNotFoundException {
         Map<Object, Object> response = new HashMap<>();
 
         Post post = new Post();
@@ -61,7 +62,7 @@ public class MainController {
     }
 
     @PostMapping("/clear")
-    public ResponseEntity clear() {
+    public ResponseEntity clear() throws UserNotFoundException, PostNotFoundException {
         User user = userService.getCurrentUser();
         postService.clearByUser(user);
         return ResponseEntity.ok("");
@@ -73,7 +74,7 @@ public class MainController {
         List<Post> posts = new ArrayList<>();
         try {
             posts = postService.getPostsByUser(userService.findByUsername(login));
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | PostNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
@@ -82,12 +83,12 @@ public class MainController {
     }
 
     @PostMapping("/all")
-    public ResponseEntity getAllPostsWithUsers() {
+    public ResponseEntity getAllPostsWithUsers() throws UserNotFoundException, PostNotFoundException {
         List<User> users = userService.getAllUsers();
         List<OutputPost> data = new ArrayList<>();
-        for(User user : users) {
+        for (User user : users) {
             List<Post> posts = postService.getPostsByUser(user);
-            for(Post post : posts) {
+            for (Post post : posts) {
                 OutputPost outputPost = new OutputPost();
 
                 if (user.getTeamList().get(0) == null) outputPost.setTeamname(null);
@@ -130,11 +131,11 @@ public class MainController {
             teamService.saveTeam(team);
             team.setUser(null);
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
-        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
+        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
     }
 
     @PostMapping("/deletepost")
-    public ResponseEntity deletePost(@RequestBody TimeDto timeDto) {
+    public ResponseEntity deletePost(@RequestBody TimeDto timeDto) throws PostNotFoundException {
         Map<Object, Object> response = new HashMap<>();
 
         Post post = postService.findByTime(timeDto.getTime());
@@ -156,7 +157,7 @@ public class MainController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
         }
-        for (Team team: teamList) {
+        for (Team team : teamList) {
             if (user.getLogin().equals(team.getLogin()))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
         }
