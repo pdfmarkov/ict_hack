@@ -1,6 +1,5 @@
 package org.comrades.springtime.controller.rest;
 
-
 import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.User;

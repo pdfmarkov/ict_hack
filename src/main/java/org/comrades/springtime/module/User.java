@@ -46,6 +46,10 @@ public class User extends UserBaseEntity {
     private String phone;
     @Column(name = "info")
     private String info;
+    @Column(name = "vk")
+    private String vk;
+    @Column(name = "tg")
+    private String tg;
 
     @ManyToOne()
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")

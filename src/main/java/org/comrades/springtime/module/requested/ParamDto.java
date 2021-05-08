@@ -11,4 +11,7 @@ public class ParamDto {
     private String phone;
     private String info;
     private String usergroup;
+    private String vk;
+    private String tg;
+
 }

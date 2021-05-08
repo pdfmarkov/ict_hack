@@ -30,6 +30,11 @@ public interface UserService {
 
     void updateInfo(User user, String info);
 
+    void updateVk(User user, String vk);
+
+    void updateTg(User user, String tg);
+
+
     User getCurrentUser();
 
     List<User> getAllUsers();

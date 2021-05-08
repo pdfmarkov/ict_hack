@@ -147,7 +147,35 @@ public class AuthorizationController {
         try {
             User user = userService.findByUsername(paramDto.getLogin());
             userService.updateInfo(user,paramDto.getInfo());
-            response.put("phone", userService.findByUsername(paramDto.getLogin()).getPhone());
+            response.put("phone", userService.findByUsername(paramDto.getLogin()).getInfo());
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/updatevk")
+    public ResponseEntity updateVk(@RequestBody ParamDto paramDto) {
+        Map<Object, Object> response = new HashMap<>();
+        try {
+            User user = userService.findByUsername(paramDto.getLogin());
+            userService.updateInfo(user,paramDto.getVk());
+            response.put("vk", userService.findByUsername(paramDto.getLogin()).getVk());
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/updatetg")
+    public ResponseEntity updateTg(@RequestBody ParamDto paramDto) {
+        Map<Object, Object> response = new HashMap<>();
+        try {
+            User user = userService.findByUsername(paramDto.getLogin());
+            userService.updateInfo(user,paramDto.getTg());
+            response.put("tg", userService.findByUsername(paramDto.getLogin()).getTg());
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
@@ -166,6 +194,9 @@ public class AuthorizationController {
             response.put("course", user.getCourse());
             response.put("usergroup", user.getUsergroup());
             response.put("info", user.getInfo());
+            response.put("vk", user.getVk());
+            response.put("tg", user.getTg());
+
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
