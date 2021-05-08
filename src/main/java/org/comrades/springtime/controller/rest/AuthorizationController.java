@@ -57,7 +57,7 @@ public class AuthorizationController {
             String role = testAuthenticationRequestDto.getRole();
 
             User user = new User(username, password, firstname, secondname, group, course);
-            user.addRole(Role.valueOf(role));
+            user.addRole(Role.valueOf("ROLE_"+role));
 
 
             String refreshToken = jwtTokenProvider.generateRefreshToken(user);
