@@ -65,7 +65,9 @@ public class AuthorizationController {
 
             String accessToken = jwtTokenProvider.generateAccessToken(user);
 
-            userService.saveUser(user);
+            if (userService.findByUsername(username) == null)
+                userService.saveUser(user);
+            else return ResponseEntity.status(HttpStatus.FOUND).body(response);
 
             Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -76,6 +78,8 @@ public class AuthorizationController {
 
         } catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
