@@ -4,6 +4,7 @@ import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.Team;
 import org.comrades.springtime.module.User;
+import org.comrades.springtime.module.requested.OutputPost;
 import org.comrades.springtime.module.requested.PostDto;
 import org.comrades.springtime.module.requested.TeamDto;
 import org.comrades.springtime.module.requested.TimeDto;
@@ -83,15 +84,26 @@ public class MainController {
     @PostMapping("/all")
     public ResponseEntity getAllPostsWithUsers() {
         List<User> users = userService.getAllUsers();
-        List<User> data = new ArrayList<>();
+        List<OutputPost> data = new ArrayList<>();
         for(User user : users) {
-            user.setPostList(null);
             List<Post> posts = postService.getPostsByUser(user);
             for(Post post : posts) {
-                post.setUser(null);
+                OutputPost outputPost = new OutputPost();
+
+                if (user.getTeamList().get(0) == null) outputPost.setTeamname(null);
+                else outputPost.setTeamname(user.getTeamList().get(0).getName());
+                outputPost.setFirstname(user.getFirstname());
+                outputPost.setSecondname(user.getSecondname());
+                outputPost.setTime(post.getTime());
+                outputPost.setText(post.getText());
+                outputPost.setTitle(post.getTitle());
+
+                List<Team> teamList = teamService.findByName(user.getTeamList().get(0).getName());
+                outputPost.setNumberOfMembers(teamList.size());
             }
-            user.setPostList(posts);
-            data.add(user);
+
+
+
         }
         return ResponseEntity.ok(data);
     }
