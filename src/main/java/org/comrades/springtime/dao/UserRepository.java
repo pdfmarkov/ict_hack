@@ -21,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByCourse(String course) throws UserNotFoundException;
 
+
     @Modifying
     @Transactional
     @Query("update User u set u.firstname = ?2 where u.UID = ?1")

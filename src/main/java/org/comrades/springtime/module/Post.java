@@ -13,6 +13,11 @@ import java.time.LocalDateTime;
 public class Post {
 
     public Post() {}
+    public Post(String title, String text, LocalDateTime time) {
+        this.title = title;
+        this.text = text;
+        this.time = time;
+    }
 
     @Id
     @Column(name = "post_id")

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class MainController {
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+
         post.setUser(user);
 
         postService.savePost(post);
@@ -58,20 +60,36 @@ public class MainController {
     public ResponseEntity clear() {
         User user = userService.getCurrentUser();
         postService.clearByUser(user);
-
         return ResponseEntity.ok("");
     }
 
     @PostMapping("/hello")
-    public ResponseEntity hello() {
-        return ResponseEntity.ok("");
+    public ResponseEntity hello(String login) {
+        Map<Object, Object> response = new HashMap<>();
+        List<Post> posts = new ArrayList<>();
+        try {
+            posts = postService.getPostsByUser(userService.findByUsername(login));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(posts);
+
     }
 
     @PostMapping("/all")
-    public ResponseEntity getAllPosts() {
-        List<Post> posts = postService.getPosts();
-        if (posts != null) return ResponseEntity.ok(posts);
-        else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("empty");
+    public ResponseEntity getAllPostsWithUsers() {
+        List<User> users = userService.getAllUsers();
+        List<User> data = new ArrayList<>();
+        for(User user : users) {
+            user.setPostList(null);
+            List<Post> posts = postService.getPostsByUser(user);
+            for(Post post : posts) {
+                post.setUser(null);
+            }
+            user.setPostList(posts);
+            data.add(user);
+        }
+        return ResponseEntity.ok(data);
     }
 
 }
