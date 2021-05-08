@@ -1,6 +1,5 @@
 package org.comrades.springtime.servise.impl;
 
-import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.dao.PostRepository;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.User;
@@ -49,7 +48,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post findById(Long id) {
         Post post;
-        post = postRepository.getPostById(id);
+        post = postRepository.getPostByPostId(id);
 
         return post;
     }
@@ -61,7 +60,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long id) {
-        Post post = postRepository.getPostById(id);
+        Post post = postRepository.getPostByPostId(id);
         postRepository.delete(post);
     }
 }

@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @NonNull
     List<Post> getPostBy();
 
-    Post getPostById(Long id);
+    Post getPostByPostId(Long id);
 
     Post findPostByTime(LocalDateTime time);
 }
