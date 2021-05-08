@@ -1,13 +1,16 @@
 package org.comrades.springtime.controller.rest;
 
 import org.comrades.springtime.customExceptions.UserNotFoundException;
+import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.Role;
 import org.comrades.springtime.module.User;
 import org.comrades.springtime.module.requested.AuthenticationRequestDto;
+import org.comrades.springtime.module.requested.LoginDto;
 import org.comrades.springtime.module.requested.ParamDto;
 import org.comrades.springtime.module.requested.TestAuthenticationRequestDto;
 import org.comrades.springtime.security.jwt.TokenHandler;
 import org.comrades.springtime.servise.EmailService;
+import org.comrades.springtime.servise.PostService;
 import org.comrades.springtime.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -18,10 +21,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NonUniqueResultException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "https://pdfmarkov.github.io")
@@ -33,15 +38,19 @@ public class AuthorizationController {
     private final TokenHandler jwtTokenProvider;
     private final UserService userService;
     private final EmailService emailService;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final Code codeGenerator;
+    private final PostService postService;
 
     @Autowired
-    public AuthorizationController(AuthenticationManager authenticationManager, TokenHandler jwtTokenProvider, UserService userService, EmailService emailService, Code codeGenerator) {
+    public AuthorizationController(AuthenticationManager authenticationManager, TokenHandler jwtTokenProvider, UserService userService, EmailService emailService, BCryptPasswordEncoder passwordEncoder, Code codeGenerator, PostService postService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
         this.codeGenerator = codeGenerator;
+        this.postService = postService;
     }
 
     @PostMapping("/register")
@@ -196,10 +205,10 @@ public class AuthorizationController {
     }
 
     @PostMapping("/getinfo")
-    public ResponseEntity getInfo(@RequestBody ParamDto paramDto) {
+    public ResponseEntity getInfo(@RequestBody LoginDto loginDto) {
         Map<Object, Object> response = new HashMap<>();
         try {
-            User user = userService.findByUsername(paramDto.getLogin());
+            User user = userService.findByUsername(loginDto.getLogin());
             response.put("firstname", user.getFirstname());
             response.put("secondname", user.getSecondname());
             response.put("phone", user.getPhone());
@@ -208,6 +217,12 @@ public class AuthorizationController {
             response.put("info", user.getInfo());
             response.put("vk", user.getVk());
             response.put("tg", user.getTg());
+            response.put("teamname", user.getTeamList().get(0).getName());
+            List<Post> posts = postService.getPostsByUser(user);
+            for(Post post : posts){
+                post.setUser(null);
+            }
+            response.put("posts", posts);
 
             return ResponseEntity.ok(response);
         } catch (UserNotFoundException e) {
@@ -240,5 +255,24 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }
+
+    @PostMapping("/getpassword")
+    public ResponseEntity getPassword(@RequestBody LoginDto loginDto) {
+        Map<Object, Object> response = new HashMap<>();
+        try {
+            codeGenerator.generateCode(loginDto.getLogin());
+            String password = codeGenerator.getCode(loginDto.getLogin());
+            emailService.sendSimpleMessage(loginDto.getLogin(), "Восстановления пароля. ITMO.TEAM", "Ваш новый пароль: " + password);
+            userService.findByUsername(loginDto.getLogin()).setPassword(passwordEncoder.encode(password));
+            return ResponseEntity.ok(response);
+        }catch (UserNotFoundException | AuthenticationException ex) {
+            if (ex instanceof UserNotFoundException) response.put("description", ex.getMessage());
+            else response.put("description", "Wrong login or password.");
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+    }
+
+
 
 }
