@@ -182,6 +182,19 @@ public class AuthorizationController {
         }
     }
 
+    @PostMapping("/deleteuser")
+    public ResponseEntity deleteUser(@RequestBody ParamDto paramDto) {
+        Map<Object, Object> response = new HashMap<>();
+        try {
+            userService.delete(userService.findIdByLogin(paramDto.getLogin()));
+            response.put("delete", userService.findIdByLogin(paramDto.getLogin()));
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/getinfo")
     public ResponseEntity getInfo(@RequestBody ParamDto paramDto) {
         Map<Object, Object> response = new HashMap<>();

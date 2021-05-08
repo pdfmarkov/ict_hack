@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -20,4 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "select p.title, p.text, p.time from posts p", nativeQuery = true)
     @NonNull
     List<Post> getPostBy();
+
+    Post getPostById(Long id);
+
+    Post findPostByTime(LocalDateTime time);
 }

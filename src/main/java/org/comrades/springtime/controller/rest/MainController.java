@@ -2,11 +2,11 @@ package org.comrades.springtime.controller.rest;
 
 import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
-import org.comrades.springtime.module.Role;
 import org.comrades.springtime.module.Team;
 import org.comrades.springtime.module.User;
 import org.comrades.springtime.module.requested.PostDto;
 import org.comrades.springtime.module.requested.TeamDto;
+import org.comrades.springtime.module.requested.TimeDto;
 import org.comrades.springtime.servise.PostService;
 import org.comrades.springtime.servise.TeamService;
 import org.comrades.springtime.servise.UserService;
@@ -121,7 +121,15 @@ public class MainController {
             team.setUser(null);
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
         } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
+    }
 
+    @PostMapping("/deletepost")
+    public ResponseEntity deletePost(@RequestBody TimeDto timeDto) {
+        Map<Object, Object> response = new HashMap<>();
+
+        Post post = postService.findByTime(timeDto.getTime());
+        postService.deletePost(post.getPostId());
+        return ResponseEntity.ok("deleted");
     }
 
     @PostMapping("/team/member")
@@ -155,7 +163,5 @@ public class MainController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-
     }
-
 }

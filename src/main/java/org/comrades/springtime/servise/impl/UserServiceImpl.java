@@ -72,6 +72,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long findIdByLogin(String login) throws UserNotFoundException {
+        User user;
+
+        try {
+            user = userRepository.findUserByLogin(login);
+        } catch (UserNotFoundException ex) {
+            //TODO: log UserNotFoundException
+            throw new UserNotFoundException(ex.getMessage());
+        }
+        if (user == null) throw new UserNotFoundException("User not found.");
+        return user.getUID();
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
