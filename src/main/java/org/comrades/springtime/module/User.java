@@ -11,9 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-public class User extends UserBaseEntity{
+public class User extends UserBaseEntity {
 
-    public User() {}
+    public User() {
+    }
+
     public User(String login, String password) {
         super(login, password);
     }

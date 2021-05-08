@@ -33,4 +33,8 @@ public interface UserService {
     User getCurrentUser();
 
     List<User> getAllUsers();
+
+    List<User> getUsersByUsergroup(String usergroup);
+
+    List<User> getUsersByCourse(String course);
 }

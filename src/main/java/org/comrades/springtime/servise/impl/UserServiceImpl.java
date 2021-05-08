@@ -5,6 +5,7 @@ import org.comrades.springtime.dao.UserRepository;
 import org.comrades.springtime.module.User;
 import org.comrades.springtime.servise.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,14 +25,13 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
     public User findByUsername(String login) throws UserNotFoundException {
         User user;
 
         try {
             user = userRepository.findUserByLogin(login);
-        }catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             //TODO: log UserNotFoundException
             throw new UserNotFoundException(ex.getMessage());
         }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userRepository.findUserByUID(id);
-        }catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             //TODO: log UserNotFoundException
             throw new UserNotFoundException(ex.getMessage());
         }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userRepository.findUserByRefreshToken(refreshToken);
-        }catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             //TODO: log UserNotFoundException
             throw new UserNotFoundException(ex.getMessage());
         }
@@ -77,6 +77,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getUsersByUsergroup(String usergroup) {
+        User user = new User();
+
+        user.setUsergroup(usergroup);
+        Example<User> userExample = Example.of(user);
+        return userRepository.findAll(userExample);
+    }
+
+    @Override
+    public List<User> getUsersByCourse(String course) {
+        User user = new User();
+
+        user.setCourse(course);
+        Example<User> userExample = Example.of(user);
+        return userRepository.findAll(userExample);
+    }
+
+    @Override
     public User saveUser(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -87,26 +105,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateFirstName(User user, String firstname) {
         user.setFirstname(firstname);
-        userRepository.updateUserFirstName(user.getUID(),firstname);
+        userRepository.updateUserFirstName(user.getUID(), firstname);
 
     }
 
     @Override
     public void updateSecondName(User user, String secondname) {
         user.setSecondname(secondname);
-        userRepository.updateUserSecondName(user.getUID(),secondname);
+        userRepository.updateUserSecondName(user.getUID(), secondname);
     }
 
     @Override
     public void updateGroup(User user, String group) {
         user.setUsergroup(group);
-        userRepository.updateUserUserGroup(user.getUID(),group);
+        userRepository.updateUserUserGroup(user.getUID(), group);
     }
 
     @Override
     public void updatePhone(User user, String phone) {
         user.setPhone(phone);
-        userRepository.updateUserPhone(user.getUID(),phone);
+        userRepository.updateUserPhone(user.getUID(), phone);
 
     }
 
@@ -131,7 +149,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userRepository.findUserByLogin(userName);
-        } catch (UserNotFoundException ignored) {}
+        } catch (UserNotFoundException ignored) {
+        }
 
         return user;
     }
@@ -140,8 +159,8 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) throws UserNotFoundException {
         User user;
         try {
-             user = findByUserId(id);
-        }catch (UserNotFoundException ex) {
+            user = findByUserId(id);
+        } catch (UserNotFoundException ex) {
             //TODO: log UserNotFoundException
             throw new UserNotFoundException(ex.getMessage());
         }
