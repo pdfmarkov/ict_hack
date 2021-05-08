@@ -263,7 +263,8 @@ public class AuthorizationController {
             codeGenerator.generateCode(loginDto.getLogin());
             String password = codeGenerator.getCode(loginDto.getLogin());
             emailService.sendSimpleMessage(loginDto.getLogin(), "Восстановления пароля. ITMO.TEAM", "Ваш новый пароль: " + password);
-            userService.findByUsername(loginDto.getLogin()).setPassword(passwordEncoder.encode(password));
+            User user = userService.findByUsername(loginDto.getLogin());
+            userService.saveUser(user);
             return ResponseEntity.ok(response);
         }catch (UserNotFoundException | AuthenticationException ex) {
             if (ex instanceof UserNotFoundException) response.put("description", ex.getMessage());
