@@ -99,8 +99,11 @@ public class MainController {
                 outputPost.setText(post.getText());
                 outputPost.setTitle(post.getTitle());
 
-                List<Team> teamList = teamService.findByName(user.getTeamList().get(0).getName());
-                outputPost.setNumberOfMembers(teamList.size());
+                if (user.getTeamList().size() != 0) {
+                    List<Team> teamList = teamService.findByName(user.getTeamList().get(0).getName());
+                    outputPost.setNumberOfMembers(teamList.size());
+                }
+                else  outputPost.setNumberOfMembers(0);
                 data.add(outputPost);
             }
         }
