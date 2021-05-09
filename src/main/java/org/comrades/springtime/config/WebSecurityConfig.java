@@ -24,6 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final String FILE = "/main/file/**";
     private final String CONTENT = "/dist/**";
     private final String MAIN = "/main/app/**";
+    private final String SOCKET = "/gs-guide-websocket/**";
 
     private final TokenHandler jwtTokenHandler;
 
@@ -55,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(REFRESH_ENDPOINT).permitAll()
                     .antMatchers(CONTENT).permitAll()
                     .antMatchers(FILE).permitAll()
+                    .antMatchers(SOCKET).permitAll()
                 //TODO: убери main
                     .antMatchers(MAIN).permitAll()
                     .anyRequest().authenticated()
@@ -68,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
         web
                 .ignoring()
-                .antMatchers("/api/refresh/**","/main/file/**", "api/aunt/**", "main/app/**");
+                .antMatchers("/api/refresh/**","/main/file/**", "api/aunt/**", "main/app/**", SOCKET);
     }
 
 
