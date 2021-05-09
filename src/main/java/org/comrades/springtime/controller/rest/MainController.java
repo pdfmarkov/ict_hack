@@ -103,7 +103,7 @@ public class MainController {
                     List<Team> teamList = teamService.findByName(user.getTeamList().get(0).getName());
                     outputPost.setNumberOfMembers(teamList.size());
                 }
-                else  outputPost.setNumberOfMembers(0);
+                else outputPost.setNumberOfMembers(0);
                 data.add(outputPost);
             }
         }
