@@ -5,10 +5,7 @@ import org.comrades.springtime.customExceptions.UserNotFoundException;
 import org.comrades.springtime.module.Post;
 import org.comrades.springtime.module.Team;
 import org.comrades.springtime.module.User;
-import org.comrades.springtime.module.requested.OutputPost;
-import org.comrades.springtime.module.requested.PostDto;
-import org.comrades.springtime.module.requested.TeamDto;
-import org.comrades.springtime.module.requested.TimeDto;
+import org.comrades.springtime.module.requested.*;
 import org.comrades.springtime.servise.PostService;
 import org.comrades.springtime.servise.TeamService;
 import org.comrades.springtime.servise.UserService;
@@ -137,6 +134,21 @@ public class MainController {
             team.setUser(null);
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
         } else return ResponseEntity.status(HttpStatus.FORBIDDEN).body("");
+    }
+
+    @PostMapping("/team/deletemember")
+    public ResponseEntity deleteMember(@RequestBody LoginDto loginDto) {
+        Map<Object, Object> response = new HashMap<>();
+        Team team = new Team();
+        User user = new User();
+        try {
+            user = userService.findByUsername(loginDto.getLogin());
+            teamService.clearByUser(user);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+            return ResponseEntity.ok("deleted");
     }
 
     @PostMapping("/deletepost")
