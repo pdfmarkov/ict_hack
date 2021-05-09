@@ -14,7 +14,7 @@ public interface TeamService {
 
     List<Team> findByName(String name);
 
-    void clearByUser(User user);
+    void clearByUser(String name, String login);
 
     Team saveTeam(Team team);
 

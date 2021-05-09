@@ -34,8 +34,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void clearByUser(User user) {
-        teamRepository.delete(user.getTeamList().get(0));
+    public void clearByUser(String name, String login) {
+        teamRepository.delete(teamRepository.findTeamByNameAndLogin(name, login));
     }
 
     @Override

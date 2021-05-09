@@ -137,24 +137,15 @@ public class MainController {
     }
 
     @PostMapping("/team/deletemember")
-    public ResponseEntity deleteMember(@RequestBody LoginDto loginDto) {
+    public ResponseEntity deleteMember(@RequestBody TeamDto teamDto) {
         Map<Object, Object> response = new HashMap<>();
-        Team team = new Team();
-        User user = new User();
-        try {
-            user = userService.findByUsername(loginDto.getLogin());
-            teamService.clearByUser(user);
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-        }
-            return ResponseEntity.ok("deleted");
+        teamService.clearByUser(teamDto.getName(), teamDto.getLogin());
+        return ResponseEntity.ok("deleted");
     }
 
     @PostMapping("/deletepost")
     public ResponseEntity deletePost(@RequestBody TimeDto timeDto) throws PostNotFoundException {
         Map<Object, Object> response = new HashMap<>();
-
         Post post = postService.findByTime(timeDto.getTime());
         postService.deletePost(post.getPostId());
         return ResponseEntity.ok("deleted");
