@@ -104,6 +104,8 @@ public class MainController {
                 data.add(outputPost);
             }
         }
+        data.sort(OutputPost::compareTo);
+
         return ResponseEntity.ok(data);
     }
 
