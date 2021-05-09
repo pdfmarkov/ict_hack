@@ -218,11 +218,14 @@ public class AuthorizationController {
             response.put("info", user.getInfo());
             response.put("vk", user.getVk());
             response.put("tg", user.getTg());
-            response.put("teamname", user.getTeamList().get(0).getName());
+
+            if (user.getTeamList().size() != 0) response.put("teamname", user.getTeamList().get(0).getName());
+
             List<Post> posts = postService.getPostsByUser(user);
             for (Post post : posts) {
                 post.setUser(null);
             }
+
             response.put("posts", posts);
             response.put("role", user.getRoles().get(0));
 

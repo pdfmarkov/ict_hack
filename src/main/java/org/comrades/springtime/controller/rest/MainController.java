@@ -91,7 +91,7 @@ public class MainController {
             for (Post post : posts) {
                 OutputPost outputPost = new OutputPost();
 
-                if (user.getTeamList().get(0) == null) outputPost.setTeamname(null);
+                if (user.getTeamList().size() == 0) outputPost.setTeamname(null);
                 else outputPost.setTeamname(user.getTeamList().get(0).getName());
                 outputPost.setFirstname(user.getFirstname());
                 outputPost.setSecondname(user.getSecondname());
