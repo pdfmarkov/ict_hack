@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.util.HtmlUtils;
 @Controller
-@CrossOrigin(origins = {"https://iuribabalin.github.io", "https://localhost:8080"})
+@CrossOrigin(origins = {"https://iuribabalin.github.io", "http://localhost:8080"})
 public class GreetingController {
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
