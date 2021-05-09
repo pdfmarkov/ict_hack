@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/gs-guide-websocket")
                 .setAllowedOrigins("https://iuribabalin.github.io/",
-                        "chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam", "\"http://localhost:8080")
+                        "chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam", "http://localhost:8080")
                 .withSockJS();
     }
 }
