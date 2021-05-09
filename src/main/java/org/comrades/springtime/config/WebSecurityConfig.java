@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
         web
                 .ignoring()
-                .antMatchers("/api/refresh/**","/main/file/**");
+                .antMatchers("/api/refresh/**","/main/file/**", "api/aunt/**", "main/app/**");
     }
 
 
