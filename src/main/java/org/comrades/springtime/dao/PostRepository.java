@@ -17,7 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostsByUser(User user);
 
     @Transactional
-    //TODO: ПЕРЕДЕЛАЙ
     @Query(value = "select p.title, p.text, p.time from posts p", nativeQuery = true)
     @NonNull
     List<Post> getPostBy();

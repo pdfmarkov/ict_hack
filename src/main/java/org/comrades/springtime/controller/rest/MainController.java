@@ -180,4 +180,50 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
     }
+
+    @PostMapping("/team/info")
+    public ResponseEntity getInfoAboutTeam(@RequestBody TeamDto teamDto) {
+        Map<Object, Object> response = new HashMap<>();
+
+        List<Team> teamList = new ArrayList<>();
+        User user = new User();
+
+        try {
+            user = userService.findByUsername(teamDto.getLogin());
+            teamList = teamService.findByName(teamDto.getName());
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+
+        if (teamList.size() != 0) {
+//            Team team = new Team();
+//            team.setUser(user);
+//            team.setName(teamList.get(0).getName());
+//            team.setLogin(user.getLogin());
+//            team.setRole(user.getRoles().get(0).toString());
+//            teamService.saveTeam(team);
+//            team.setUser(null);
+
+            response.put("teamname", teamList.get(0).getName());
+            List<User> members = new ArrayList<>();
+            User member;
+            for (Team team : teamList) {
+                try {
+                    member = userService.findByUsername(team.getLogin());
+                    member.setTeamList(null);
+                    member.setPostList(null);
+                    member.setPassword("nope");
+                    member.setRefreshToken("nope");
+                    members.add(member);
+                } catch (UserNotFoundException e) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+                }
+            }
+
+            response.put("members", members);
+
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+    }
 }
