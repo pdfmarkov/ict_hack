@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "https://pdfmarkov.github.io")
+@CrossOrigin(origins = "https://iuribabalin.github.io")
 @RestController
 @RequestMapping("/api/aunt/**")
 public class AuthorizationController {
